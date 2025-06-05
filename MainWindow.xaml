@@ -1,0 +1,12 @@
+﻿<Window x:Class="FastMenu.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="RingMenu" Height="300" Width="300"
+        WindowStyle="None"
+        AllowsTransparency="True"
+        Background="#01FFFFFF"
+        Topmost="True"
+        ShowInTaskbar="False"
+        IsHitTestVisible="True">
+    <Canvas x:Name="MainCanvas" Background="Transparent" IsHitTestVisible="True"/>
+</Window>
