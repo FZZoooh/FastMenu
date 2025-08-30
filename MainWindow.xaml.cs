@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using System.Windows.Interop;
 using System.Windows.Media.Media3D;
 using System.Windows;
@@ -52,9 +52,15 @@ namespace FastMenu
                 },
                 new RadialMenuItem
                 {
-                    Icon = "🎨",
+                    Icon = "🖼",
                     Command = MenuCommands.OpenArt,
                     ToolTip = "打开艺术"
+                },
+                new RadialMenuItem
+                {
+                    Icon = "🎨",
+                    Command = MenuCommands.OpenMspaint,
+                    ToolTip = "打开画图"
                 }
             };
 
@@ -64,11 +70,13 @@ namespace FastMenu
 
         }
 
+        // 鼠标离开窗口时隐藏窗口
         private void WindowHider(object sender, MouseEventArgs e)
         {
             this.Hide();
         }
 
+        // 跟踪鼠标移动并更新按钮效果
         private void GlobalMouseTracker(object sender, MouseEventArgs e)
         {
             // 获取鼠标在屏幕坐标（非窗口坐标）
@@ -85,6 +93,7 @@ namespace FastMenu
         }
 
 
+        // 根据鼠标位置更新按钮缩放效果
         private void UpdateButtonScale(Button button, Point mousePos)
         {
             // 计算按钮中心（考虑实际渲染位置）
@@ -104,6 +113,7 @@ namespace FastMenu
             button.RenderTransform = new ScaleTransform(scaleFactor, scaleFactor);
         }
 
+        // 注册热键
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             var helper = new WindowInteropHelper(this);
@@ -114,12 +124,14 @@ namespace FastMenu
             RegisterHotKey(hwnd, HOTKEY_ID, MOD_ALT, VK_R); // Alt+R
         }
 
+        // 取消注册热键
         private void MainWindow_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
             var hwnd = new WindowInteropHelper(this).Handle;
             UnregisterHotKey(hwnd, HOTKEY_ID);
         }
 
+        // 处理Windows消息
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             const int WM_HOTKEY = 0x0312;
@@ -133,6 +145,7 @@ namespace FastMenu
             return IntPtr.Zero;
         }
 
+        // 在鼠标位置显示菜单
         private void ShowAtMouse()
         {
             // 获取当前窗口的DPI缩放因子
@@ -160,6 +173,7 @@ namespace FastMenu
             Activate();
         }
 
+        // 生成环形菜单按钮
         private void GenerateRadialButtons()
         {
             MainCanvas.Children.Clear();
@@ -175,6 +189,7 @@ namespace FastMenu
             }
         }
 
+        // 计算按钮在环形菜单中的位置
         private Point CalculateButtonPosition(int index, int total, double radius)
         {
             double angle = 2 * Math.PI * index / total;
@@ -186,6 +201,7 @@ namespace FastMenu
             );
         }
 
+        // 创建环形菜单按钮
         private Button CreateRadialButton(RadialMenuItem item)
         {
             var button = new Button
@@ -198,6 +214,7 @@ namespace FastMenu
             return button;
         }
 
+        // 执行命令
         private void ExecuteCommand(ICommand command)
         {
             if (command == MenuCommands.OpenNotepad)
@@ -216,6 +233,10 @@ namespace FastMenu
             {
                 Process.Start("explorer.exe", "D:\\Documents\\Images\\Arts");
             }
+            else if (command == MenuCommands.OpenMspaint)
+            {
+                Process.Start("mspaint.exe");
+            }
             else
             {
                 command.Execute(null);
@@ -226,6 +247,7 @@ namespace FastMenu
         [DllImport("user32.dll", SetLastError = true)]
         static extern void LockWorkStation();
 
+        // 锁定计算机
         private void LockComputer()
         {
             LockWorkStation();
